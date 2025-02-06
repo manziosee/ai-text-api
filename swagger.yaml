@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: AI Chat API
+  version: 1.0.0
+  description: API for interacting with OpenAI's GPT-3.5-turbo model
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /chat/send:
+    post:
+      summary: Send a message to the AI
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The message to send to the AI
+      responses:
+        '200':
+          description: Successful response from the AI
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: The AI's response
+        '400':
+          description: Bad request (e.g., missing message)
+        '500':
+          description: Internal server error
