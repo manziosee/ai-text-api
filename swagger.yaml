@@ -3,8 +3,13 @@ info:
   title: AI Chat API
   version: 1.0.0
   description: API for interacting with OpenAI's GPT-3.5-turbo model
+
 servers:
-  - url: http://localhost:3000/api
+  - url: http://localhost:5000/api
+    description: Development server
+  - url: https://taskforce-challenge.onrender.com/api
+    description: Render (Production) server
+
 paths:
   /chat/send:
     post:

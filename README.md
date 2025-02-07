@@ -1,7 +1,3 @@
-Absolutely! Below is a detailed `README.md` file for your `ai-text-api` project. This file provides clear instructions for setting up, running, and deploying the backend API.
-
----
-
 # **AI Text API**
 
 This is a backend API that interacts with OpenAI's GPT-3.5-turbo model to process user input and generate AI responses. The API is built using **Node.js**, **Express**, and **Swagger** for documentation.
