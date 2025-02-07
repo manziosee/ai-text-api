@@ -3,6 +3,7 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const chatRoutes = require('./routes/chatRoutes');
+
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 const app = express();
