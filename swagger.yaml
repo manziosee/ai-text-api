@@ -5,10 +5,10 @@ info:
   description: API for interacting with OpenAI's GPT-3.5-turbo model
 
 servers:
-  - url: http://localhost:5000/api
+  - url: http://localhost:5000
     description: Development server
-  - url: https://taskforce-challenge.onrender.com/api
-    description: Render (Production) server
+  - url: https://ai-text-api.onrender.com
+    description: Render server
 
 paths:
   /chat/send:
