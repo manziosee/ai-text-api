@@ -152,7 +152,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 ## **Support**
-If you encounter any issues or have questions, feel free to open an issue on the [GitHub repository](https://github.com/your-username/ai-text-api/issues).
+If you encounter any issues or have questions, feel free to open an issue on the [GitHub repository](https://github.com/manziosee/ai-text-api/issues).
 
 ---
 
