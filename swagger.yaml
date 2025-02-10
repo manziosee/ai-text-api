@@ -11,7 +11,7 @@ servers:
     description: Render server
 
 paths:
-  /api/chat/send/:
+  /api/recruit/:
     post:
       summary: Send a message to the AI
       requestBody:
@@ -21,7 +21,7 @@ paths:
             schema:
               type: object
               properties:
-                message:
+                prompt:
                   type: string
                   description: The message to send to the AI
       responses:
