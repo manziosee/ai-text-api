@@ -16,53 +16,79 @@ exports.getRecruitmentResponse = void 0;
 const openai_1 = require("openai");
 const trainingData_1 = require("../utils/trainingData");
 const dotenv_1 = __importDefault(require("dotenv"));
-// Ensure environment variables are loaded
 dotenv_1.default.config();
-// Check if API key exists
 if (!process.env.OPENAI_API_KEY) {
     throw new Error('OPENAI_API_KEY environment variable is missing');
 }
 const openai = new openai_1.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
+function isQuestion(text) {
+    return (text.toLowerCase().startsWith('who') ||
+        text.toLowerCase().startsWith('what') ||
+        text.toLowerCase().startsWith('when') ||
+        text.toLowerCase().startsWith('where') ||
+        text.toLowerCase().startsWith('why') ||
+        text.endsWith('?'));
+}
 const getRecruitmentResponse = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     try {
-        const { prompt } = req.body;
+        const { prompt } = req.body; // Remove userId
         if (!prompt) {
             res.status(400).json({ error: 'Prompt is required' });
             return;
         }
-        // Load training data
         const trainingData = yield (0, trainingData_1.loadTrainingData)();
-        // Find the most relevant training example
         const relevantExample = trainingData.find(data => data.prompt.toLowerCase().includes(prompt.toLowerCase()));
         if (relevantExample) {
-            // If we have a direct match in our training data, use it
             res.json({ response: relevantExample.completion });
             return;
         }
-        // If no direct match, use OpenAI to generate a response
-        const completion = yield openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
+        if (isQuestion(prompt)) {
+            const messages = [
                 {
                     role: "system",
-                    content: "You are a recruitment assistant. Provide detailed professional profiles based on the requirements given."
+                    content: `You are a friendly and helpful AI recruitment assistant.  When answering questions, provide clear, concise, and informative responses.  If you don't know the answer, say so politely. Aim to be helpful and conversational.`
                 },
                 {
                     role: "user",
                     content: prompt
                 }
-            ],
+            ];
+            const completion = yield openai.chat.completions.create({
+                model: "gpt-3.5-turbo",
+                messages: messages,
+                temperature: 0.7,
+                max_tokens: 250,
+            });
+            const response = ((_a = completion.choices[0].message) === null || _a === void 0 ? void 0 : _a.content) || "I'm sorry, I don't have the answer to that question.";
+            res.json({ response });
+            return;
+        }
+        const messages = [
+            {
+                role: "system",
+                content: `You are a friendly and helpful AI recruitment assistant. Your goal is to provide informative and engaging responses as if you are having a conversation.  When asked to describe a candidate, provide a brief and well-structured profile based on the requirements.
+                    Emphasize skills, experience, and relevant accomplishments.  Respond in a conversational tone.  For example, instead of just outputting a profile, you might start with "Okay, here's a possible candidate profile:" or "I can help you with that!  Let me generate a profile for you."`
+            },
+            {
+                role: "user",
+                content: prompt
+            }
+        ];
+        const completion = yield openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: messages,
             temperature: 0.7,
-            max_tokens: 200
+            max_tokens: 250,
         });
-        const response = completion.choices[0].message.content;
+        const response = ((_b = completion.choices[0].message) === null || _b === void 0 ? void 0 : _b.content) || "I'm sorry, I couldn't generate a relevant response.";
         res.json({ response });
     }
     catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: error.message || 'Internal server error' });
     }
 });
 exports.getRecruitmentResponse = getRecruitmentResponse;
