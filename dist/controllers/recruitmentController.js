@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,19 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { OpenAI } from 'openai';
-import { loadTrainingData } from '../utils/trainingData';
-import dotenv from 'dotenv';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRecruitmentResponse = void 0;
+const openai_1 = require("openai");
+const trainingData_1 = require("../utils/trainingData");
+const dotenv_1 = __importDefault(require("dotenv"));
 // Ensure environment variables are loaded
-dotenv.config();
+dotenv_1.default.config();
 // Check if API key exists
 if (!process.env.OPENAI_API_KEY) {
     throw new Error('OPENAI_API_KEY environment variable is missing');
 }
-const openai = new OpenAI({
+const openai = new openai_1.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
-export const getRecruitmentResponse = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getRecruitmentResponse = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { prompt } = req.body;
         if (!prompt) {
@@ -27,7 +33,7 @@ export const getRecruitmentResponse = (req, res, next) => __awaiter(void 0, void
             return;
         }
         // Load training data
-        const trainingData = yield loadTrainingData();
+        const trainingData = yield (0, trainingData_1.loadTrainingData)();
         // Find the most relevant training example
         const relevantExample = trainingData.find(data => data.prompt.toLowerCase().includes(prompt.toLowerCase()));
         if (relevantExample) {
@@ -59,3 +65,4 @@ export const getRecruitmentResponse = (req, res, next) => __awaiter(void 0, void
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+exports.getRecruitmentResponse = getRecruitmentResponse;
