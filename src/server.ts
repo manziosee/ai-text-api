@@ -4,10 +4,12 @@ import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import { router } from './routes/index';
 import swaggerDocument from './utils/swagger';
+import { validateEnv } from './utils/validateEnv';
 
 dotenv.config();
+validateEnv();
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
